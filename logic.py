@@ -19,7 +19,7 @@ self.map = {
 act[0,0]
 
 def act(position):
-    self.position = tile(x, y)
+    self.position = tile(position)
     if self.position["end"] is True:
         # notify_finish() TODO
         return True
@@ -35,8 +35,8 @@ def act(position):
             else:
                 self.position["forbidden_dirs"].append(direction)
 
-
-        back()
+        look_at(self.position["input_dir"])
+        move()
         # notify_and_wait()
         return False
 
@@ -60,7 +60,8 @@ def tile(x, y):
 
 def notify_and_wait:
     notify()
-    while status is WAITING:
+    self.status = WAITING
+    while self.status is WAITING:
         pass
 
 def notify:
