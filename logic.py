@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import time
 from bluetooth import *
+from .controllers import proximity_sensor
+from .controllers import motors
 
 NORTH = 10
 EAST = 20
@@ -15,6 +17,12 @@ SLAVE = 80
 
 SLAVE_COUNT = 1
 
+# Distance limit to obstacle in cm
+DISTANCE_LIMIT = 20
+
+STEP_TIME = 2
+
+VIRTUAL_SIMULATION = True
 
 robot = {
     "tile": None,
@@ -77,7 +85,6 @@ def act(position):
         return False
 
 
-
 def next_position(position, direction):
     if direction is NORTH:
         return [position[0], position[1] + 1]
@@ -111,10 +118,12 @@ def tile(position):
         robot["map"]["tiles"].append(tile)
     return tile
 
+
 def directions_except(except_dir):
     dirs = [NORTH, WEST, EAST, SOUTH]
     dirs.remove(except_dir)
     return dirs
+
 
 def opposite(direction):
     if direction is NORTH:
@@ -125,6 +134,7 @@ def opposite(direction):
         return NORTH
     else:
         return EAST
+
 
 def notify_and_wait():
     if robot["type"] is SLAVE:
@@ -154,16 +164,16 @@ def notify_and_wait():
     robot["status"] = RUNNING
 
 
-
 def update_data(data):
     #TODO save new info
     pass
+
 
 def notify():
     uuid = "00000000-0000-0000-0000-000000000001" #MASTER UUID
 
     while True:
-        service_matches = find_service( uuid = uuid, address = addr )
+        service_matches = find_service(uuid=uuid, address=addr)
 
         if len(service_matches) == 0:
             print("Couldn't notify. Retrying...")
@@ -186,21 +196,26 @@ def notify():
             sock.close()
             break
 
-def move(steps=1):
-    #TODO gpio move
-    pass
 
-def rotate(grades):
-    #TODO gpio rotate
-    pass
+def move(steps=1):
+    motors.forward(steps * STEP_TIME)
+
+
+def rotate(degrees):
+    motors.rotate(degrees)
+
 
 def check(direction):
     look(direction)
     return path_clear()
 
+
 def path_clear():
     #TODO gpio check if front is blocked
+    # obstacle_distance = proximity_sensor.check_distance()
+    # return obstacle_distance < DISTANCE_LIMIT
     return True
+
 
 def look_north():
     if robot["direction"] is EAST:
@@ -219,6 +234,7 @@ def look_east():
     elif robot["direction"] is NORTH:
         rotate(-90)
 
+
 def look_south():
     if robot["direction"] is WEST:
         rotate(90)
@@ -227,6 +243,7 @@ def look_south():
     elif robot["direction"] is EAST:
         rotate(-90)
 
+
 def look_west():
     if robot["direction"] is SOUTH:
         rotate(90)
@@ -234,6 +251,7 @@ def look_west():
         rotate(180)
     elif robot["direction"] is NORTH:
         rotate(-90)
+
 
 def look(direction):
     if direction is NORTH:
