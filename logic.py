@@ -40,12 +40,12 @@ DISTANCE_LIMIT = 20
 STEP_TIME = 2
 
 robot = {
-    "id": 1,
+    "id": 2,
     "tile": None,
     "direction": NORTH,
     "status": WAITING,
-    "type": MASTER,
-    "uuid": "00000000-0000-0000-0000-000000000001",
+    "type": SLAVE,
+    "uuid": "00000000-0000-0000-0000-000000000002",
     "map": {
         "modified": [],
         "tiles": [
@@ -320,7 +320,7 @@ def look_west():
         rotate(-90)
 
 
-def look(direction):
+def look_at(direction):
     if direction is NORTH:
         look_north()
     elif direction is EAST:
