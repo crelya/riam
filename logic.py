@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import time
+import json
 from bluetooth import *
 
 VIRTUAL_SIMULATION = True
@@ -22,8 +23,16 @@ MASTER = 70
 SLAVE = 80
 
 SLAVE_COUNT = 0
-MASTER_UUID = "00000000-0000-0000-0000-000000000001"
-SLAVE_UUIDS = ["00000000-0000-0000-0000-000000000002"]
+MASTER_BT = {
+    "uuid": "00000000-0000-0000-0000-000000000001",
+    "addr": "08:D4:0C:ED:C2:30"
+}
+SLAVE_BTS = [
+    {
+        "uuid": "00000000-0000-0000-0000-000000000002",
+        "addr": "00:1A:7D:DA:71:14"
+    }
+]
 
 # Distance limit to obstacle in cm
 DISTANCE_LIMIT = 20
@@ -144,7 +153,7 @@ def opposite(direction):
 
 def notify_and_wait():
     if robot["type"] is SLAVE:
-        notify(MASTER_UUID)
+        notify(MASTER_BT)
     robot["status"] = WAITING
 
     count = 0
@@ -168,7 +177,7 @@ def notify_and_wait():
 
     count = 0
     while robot["type"] is MASTER and count < SLAVE_COUNT:
-        notify(SLAVE_UUIDS[count])
+        notify(MASTER_BTS[count])
         count += 1
 
     robot["status"] = RUNNING
@@ -179,8 +188,9 @@ def update_data(data):
     pass
 
 
-def notify(uuid):
-    addr = None
+def notify(bt_info):
+    uuid = bt_info["uuid"]
+    addr = bt_info["addr"]
     while True:
         service_matches = find_service(uuid=uuid, address=addr)
 
@@ -200,7 +210,7 @@ def notify(uuid):
             sock=BluetoothSocket( RFCOMM )
             sock.connect((host, port))
 
-            sock.send('{"foo": "bar"}')
+            sock.send(json.dumps(robot["map"])) #'{"foo": "bar"}'
 
             sock.close()
             break
