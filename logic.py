@@ -272,7 +272,7 @@ def rotate(degrees):
 
 
 def check(direction):
-    look(direction)
+    look_at(direction)
     return path_clear()
 
 
