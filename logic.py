@@ -40,6 +40,7 @@ DISTANCE_LIMIT = 20
 STEP_TIME = 2
 
 robot = {
+    "id": 0,
     "tile": None,
     "direction": NORTH,
     "status": WAITING,
@@ -83,11 +84,14 @@ def act(position):
         # notify_finish() TODO
         return True
     else:
+        while len(robot["map"]["tiles"]) < robot["id"]:
+            notify_and_wait()
         while len(robot["tile"]["possible_dirs"]) > 0:
             direction = robot["tile"]["possible_dirs"].pop(0)
             if check(direction):
                 robot["tile"]["output_dirs"].append(direction)
                 move()
+
                 notify_and_wait()
                 if act(next_position(position, direction)):
                     return True
@@ -174,7 +178,7 @@ def notify_and_wait():
         notify(MASTER_BT)
     robot["status"] = WAITING
 
-    count = 0
+    count = 0 #TODO modify with unique array of ids to avoid duplication
     while (robot["type"] is SLAVE and count < 1) or (robot["type"] is MASTER and count < SLAVE_COUNT):
         print("Waiting for connection on RFCOMM channel %d" % port)
         client_sock, client_info = server_sock.accept()
