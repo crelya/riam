@@ -13,7 +13,7 @@ RUNNING = 60
 MASTER = 70
 SLAVE = 80
 
-SLAVE_COUNT = 1
+SLAVE_COUNT = 0
 
 
 robot = {
@@ -161,7 +161,7 @@ def update_data(data):
 
 def notify():
     uuid = "00000000-0000-0000-0000-000000000001" #MASTER UUID
-
+    addr = None
     while True:
         service_matches = find_service( uuid = uuid, address = addr )
 
