@@ -38,14 +38,15 @@ SLAVE_BTS = [
 DISTANCE_LIMIT = 20
 
 STEP_TIME = 2
+ROBOT_ID = 1
 
 robot = {
-    "id": 1,
+    "id": ROBOT_ID,
     "tile": None,
     "direction": NORTH,
     "status": WAITING,
-    "type": MASTER,
-    "uuid": "00000000-0000-0000-0000-000000000001",
+    "type": MASTER if ROBOT_ID == 1 else SLAVE,
+    "uuid": "00000000-0000-0000-0000-00000000000%d" % (ROBOT_ID),
     "map": {
         "modified": [],
         "tiles": [
@@ -55,6 +56,7 @@ robot = {
                 "end": False,
                 "input_dir": [],
                 "output_dirs": [],
+                "taken_dirs": [],
                 "possible_dirs": [NORTH],
                 "forbidden_dirs": [WEST, SOUTH, EAST]
             }
@@ -94,6 +96,7 @@ def act(position):
             direction = robot["tile"]["possible_dirs"].pop(0)
             if check(direction):
                 robot["tile"]["output_dirs"].append(direction)
+                robot["tile"]["taken_dirs"].append(direction)
                 move()
 
                 notify_and_wait()
@@ -101,6 +104,16 @@ def act(position):
                     return True
             else:
                 robot["tile"]["forbidden_dirs"].append(direction)
+        for output_dir in robot["tile"]["output_dirs"]:
+            if not output_dir in robot["tile"]["taken_dirs"]:
+                if check(direction):
+                    robot["tile"]["taken_dirs"].append(direction)
+                    move()
+                    notify_and_wait()
+                    if act(next_position(position, direction)):
+                        return True
+                    # TODO add forbidden time
+
 
         look_at(robot["tile"]["input_dir"])
         move()
@@ -331,5 +344,6 @@ def look_at(direction):
         look_west()
 
 act([0,0])
-client_sock.close()
+# client_sock.close()
 server_sock.close()
+print("Execution terminated")
