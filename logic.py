@@ -40,12 +40,12 @@ DISTANCE_LIMIT = 20
 STEP_TIME = 2
 
 robot = {
-    "id": 2,
+    "id": 1,
     "tile": None,
     "direction": NORTH,
     "status": WAITING,
-    "type": SLAVE,
-    "uuid": "00000000-0000-0000-0000-000000000002",
+    "type": MASTER,
+    "uuid": "00000000-0000-0000-0000-000000000001",
     "map": {
         "modified": [],
         "tiles": [
