@@ -33,6 +33,8 @@ def forward(time):
 
     sleep(time)
 
+    stop()
+
 
 def backwards(time):
 
@@ -47,11 +49,16 @@ def backwards(time):
 
     sleep(time)
 
+    stop()
+
+def rotate(degres):
+    #TODO rotate motor
+    pass
+
 
 def stop():
 
     print "STOPPING MOTORS"
     GPIO.output(Motor1E, GPIO.LOW)
     GPIO.output(Motor2E, GPIO.LOW)
-
     GPIO.cleanup()
