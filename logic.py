@@ -106,11 +106,11 @@ def act(position):
                 robot["tile"]["forbidden_dirs"].append(direction)
         for output_dir in robot["tile"]["output_dirs"]:
             if not output_dir in robot["tile"]["taken_dirs"]:
-                if check(direction):
-                    robot["tile"]["taken_dirs"].append(direction)
+                if check(output_dir):
+                    robot["tile"]["taken_dirs"].append(output_dir)
                     move()
                     notify_and_wait()
-                    if act(next_position(position, direction)):
+                    if act(next_position(position, output_dir)):
                         return True
                     # TODO add forbidden time
 
