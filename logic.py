@@ -217,8 +217,8 @@ def update_data(data):
             if not direction in t["output_dirs"]:
                 t["output_dirs"].append(direction)
         for direction in t["possible_dirs"]:
-            if not direction in new_tile["output_dirs"]:
-                t["output_dirs"].remove(direction)
+            if not direction in new_tile["possible_dirs"]:
+                t["possible_dirs"].remove(direction)
         for direction in new_tile["forbidden_dirs"]:
             if not direction in t["forbidden_dirs"]:
                 t["forbidden_dirs"].append(direction)
