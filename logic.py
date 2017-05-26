@@ -80,13 +80,15 @@ advertise_service( server_sock, "RIAM_1",
 
 def act(position):
     print(position)
-    robot["map"]["modified"].append(position)
+    if not position in robot["map"]["modified"]:
+        robot["map"]["modified"].append(position)
     robot["tile"] = tile(position)
     if robot["tile"]["end"] is True:
         # notify_finish() TODO
         return True
     else:
-        while len(robot["map"]["tiles"]) < robot["id"]:
+        while len(robot["map"]["tiles"]) <= robot["id"]:
+            print(len(robot["map"]["tiles"]))
             notify_and_wait()
         while len(robot["tile"]["possible_dirs"]) > 0:
             direction = robot["tile"]["possible_dirs"].pop(0)
@@ -222,7 +224,8 @@ def update_data(data):
         for direction in new_tile["forbidden_dirs"]:
             if not direction in t["forbidden_dirs"]:
                 t["forbidden_dirs"].append(direction)
-        robot["map"]["modified"].append(t["position"])
+        if not t["position"] in robot["map"]["modified"]:
+            robot["map"]["modified"].append(t["position"])
 
 def clear_modified():
     robot["map"]["modified"] = []
