@@ -148,6 +148,7 @@ def tile(position):
             "end": False,
             "input_dir": [opposite(robot["direction"])],
             "output_dirs": [],
+            "taken_dirs": [],
             "possible_dirs": possible_directions(robot["direction"]),
             "forbidden_dirs": []
         }
