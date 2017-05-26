@@ -87,7 +87,7 @@ def act(position):
         # notify_finish() TODO
         return True
     else:
-        while len(robot["map"]["tiles"]) <= robot["id"]:
+        while len(robot["map"]["tiles"]) < robot["id"]:
             print(len(robot["map"]["tiles"]))
             notify_and_wait()
         while len(robot["tile"]["possible_dirs"]) > 0:
