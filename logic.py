@@ -1,8 +1,14 @@
 #!/usr/bin/python
 import time
 from bluetooth import *
-from .controllers import proximity_sensor
-from .controllers import motors
+
+VIRTUAL_SIMULATION = True
+
+if not VIRTUAL_SIMULATION:
+    from controllers import proximity_sensor
+    from controllers import motors
+
+
 
 NORTH = 10
 EAST = 20
@@ -16,13 +22,13 @@ MASTER = 70
 SLAVE = 80
 
 SLAVE_COUNT = 0
+MASTER_UUID = "00000000-0000-0000-0000-000000000001"
+SLAVE_UUIDS = ["00000000-0000-0000-0000-000000000002"]
 
 # Distance limit to obstacle in cm
 DISTANCE_LIMIT = 20
 
 STEP_TIME = 2
-
-VIRTUAL_SIMULATION = True
 
 robot = {
     "tile": None,
@@ -138,7 +144,7 @@ def opposite(direction):
 
 def notify_and_wait():
     if robot["type"] is SLAVE:
-        notify()
+        notify(MASTER_UUID)
     robot["status"] = WAITING
 
     count = 0
@@ -160,6 +166,10 @@ def notify_and_wait():
         update_data(data)
         count += 1
 
+    count = 0
+    while robot["type"] is MASTER and count < SLAVE_COUNT:
+        notify(SLAVE_UUIDS[count])
+        count += 1
 
     robot["status"] = RUNNING
 
@@ -169,8 +179,7 @@ def update_data(data):
     pass
 
 
-def notify():
-    uuid = "00000000-0000-0000-0000-000000000001" #MASTER UUID
+def notify(uuid):
     addr = None
     while True:
         service_matches = find_service(uuid=uuid, address=addr)
@@ -198,11 +207,11 @@ def notify():
 
 
 def move(steps=1):
-    motors.forward(steps * STEP_TIME)
+    return True if VIRTUAL_SIMULATION else motors.forward(steps * STEP_TIME)
 
 
 def rotate(degrees):
-    motors.rotate(degrees)
+    return True if VIRTUAL_SIMULATION else motors.rotate(degrees)
 
 
 def check(direction):
@@ -211,6 +220,7 @@ def check(direction):
 
 
 def path_clear():
+
     #TODO gpio check if front is blocked
     # obstacle_distance = proximity_sensor.check_distance()
     # return obstacle_distance < DISTANCE_LIMIT
