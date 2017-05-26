@@ -11,18 +11,18 @@ if not VIRTUAL_SIMULATION:
 
 
 
-NORTH = 10
-EAST = 20
-SOUTH = 30
-WEST = 40
+NORTH = "north"
+EAST = "east"
+SOUTH = "south"
+WEST = "west"
 
-WAITING = 50
-RUNNING = 60
+WAITING = "waiting"
+RUNNING = "running"
 
-MASTER = 70
-SLAVE = 80
+MASTER = "master"
+SLAVE = "slave"
 
-SLAVE_COUNT = 0
+SLAVE_COUNT = 1
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": "08:D4:0C:ED:C2:30"
@@ -84,7 +84,7 @@ def act(position):
         return True
     else:
         while len(robot["tile"]["possible_dirs"]) > 0:
-            direction = robot["tile"]["possible_dirs"].pop()
+            direction = robot["tile"]["possible_dirs"].pop(0)
             if check(direction):
                 robot["tile"]["output_dirs"].append(direction)
                 move()
@@ -123,21 +123,19 @@ def tile(position):
     if not exists:
         tile = {
             "position": position,
-            "begin": True,
+            "begin": False,
             "end": False,
             "input_dir": [opposite(robot["direction"])],
             "output_dirs": [],
-            "possible_dirs": directions_except(opposite(robot["direction"])),
+            "possible_dirs": possible_directions(robot["direction"]),
             "forbidden_dirs": []
         }
         robot["map"]["tiles"].append(tile)
     return tile
 
 
-def directions_except(except_dir):
-    dirs = [NORTH, WEST, EAST, SOUTH]
-    dirs.remove(except_dir)
-    return dirs
+def possible_directions(input_dir):
+    return [input_dir, left(input_dir), right(input_dir)]
 
 
 def opposite(direction):
@@ -149,6 +147,26 @@ def opposite(direction):
         return NORTH
     else:
         return EAST
+
+def left(direction):
+    if direction is NORTH:
+        return WEST
+    elif direction is EAST:
+        return NORTH
+    elif direction is SOUTH:
+        return EAST
+    else:
+        return SOUTH
+
+def right(direction):
+    if direction is NORTH:
+        return EAST
+    elif direction is EAST:
+        return SOUTH
+    elif direction is SOUTH:
+        return WEST
+    else:
+        return NORTH
 
 
 def notify_and_wait():
@@ -177,7 +195,7 @@ def notify_and_wait():
 
     count = 0
     while robot["type"] is MASTER and count < SLAVE_COUNT:
-        notify(MASTER_BTS[count])
+        notify(SLAVE_BTS[count])
         count += 1
 
     robot["status"] = RUNNING
