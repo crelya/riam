@@ -305,6 +305,7 @@ def look_north():
         rotate(180)
     elif robot["direction"] is WEST:
         rotate(-90)
+    robot["direction"] = NORTH
 
 
 def look_east():
@@ -314,6 +315,7 @@ def look_east():
         rotate(180)
     elif robot["direction"] is NORTH:
         rotate(-90)
+    robot["direction"] = EAST
 
 
 def look_south():
@@ -323,6 +325,7 @@ def look_south():
         rotate(180)
     elif robot["direction"] is EAST:
         rotate(-90)
+    robot["direction"] = SOUTH
 
 
 def look_west():
@@ -332,6 +335,7 @@ def look_west():
         rotate(180)
     elif robot["direction"] is NORTH:
         rotate(-90)
+    robot["direction"] = WEST
 
 
 def look_at(direction):

@@ -35,7 +35,7 @@ rotate	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def rotate(degrees):
 check	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def check(direction):$/;"	function	line:288
 path_clear	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def path_clear():$/;"	function	line:293
 look_north	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_north():$/;"	function	line:301
-look_east	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_east():$/;"	function	line:310
-look_south	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_south():$/;"	function	line:319
-look_west	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_west():$/;"	function	line:328
-look_at	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_at(direction):$/;"	function	line:337
+look_east	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_east():$/;"	function	line:311
+look_south	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_south():$/;"	function	line:321
+look_west	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_west():$/;"	function	line:331
+look_at	/home/dorgroi/projects/uni/rasp_in_a_maze/logic.py	/^def look_at(direction):$/;"	function	line:341
