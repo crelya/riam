@@ -22,7 +22,7 @@ RUNNING = "running"
 MASTER = "master"
 SLAVE = "slave"
 
-SLAVE_COUNT = 1
+SLAVE_COUNT = 0
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": "08:D4:0C:ED:C2:30"
@@ -47,6 +47,7 @@ robot = {
     "type": MASTER,
     "uuid": "00000000-0000-0000-0000-000000000001",
     "map": {
+        "modified": [],
         "tiles": [
             {
                 "position": [0, 0],
@@ -79,6 +80,7 @@ advertise_service( server_sock, "RIAM_1",
 
 def act(position):
     print(position)
+    robot["map"]["modified"].append(position)
     robot["tile"] = tile(position)
     if robot["tile"]["end"] is True:
         # notify_finish() TODO
@@ -194,7 +196,7 @@ def notify_and_wait():
         print("disconnected")
 
         client_sock.close()
-        update_data(data)
+        update_data(json.loads(data))
         count += 1
 
     count = 0
@@ -202,12 +204,28 @@ def notify_and_wait():
         notify(SLAVE_BTS[count])
         count += 1
 
+    clear_modified()
     robot["status"] = RUNNING
 
 
 def update_data(data):
-    #TODO save new info
-    pass
+    for new_tile in data:
+        tile = tile(tile_received["position"])
+        tile["end"] = tile["end"] or new_tile["end"]
+        tile["input_dir"] = new_tile["input_dir"]
+        for direction in new_tile["output_dirs"]:
+            if not direction in tile["output_dirs"]:
+                tile["output_dirs"].append(direction)
+        for direction in tile["possible_dirs"]:
+            if not direction in new_tile["output_dirs"]:
+                tile["output_dirs"].remove(direction)
+        for direction in new_tile["forbidden_dirs"]:
+            if not direction in tile["forbidden_dirs"]:
+                tile["forbidden_dirs"].append(direction)
+        robot["map"]["modified"].append(tile["position"])
+
+def clear_modified():
+    robot["map"]["modified"] = []
 
 
 def notify(bt_info):
@@ -232,7 +250,11 @@ def notify(bt_info):
             sock=BluetoothSocket( RFCOMM )
             sock.connect((host, port))
 
-            sock.send(json.dumps(robot["map"])) #'{"foo": "bar"}'
+            modified_map = []
+            for position in robot["map"]["modified"]:
+                modified_map.append(tile(position))
+
+            sock.send(json.dumps(modified_map)) #'{"foo": "bar"}'
 
             sock.close()
             break
