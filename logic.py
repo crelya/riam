@@ -22,7 +22,7 @@ RUNNING = "running"
 MASTER = "master"
 SLAVE = "slave"
 
-SLAVE_COUNT = 0
+SLAVE_COUNT = 1
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": "08:D4:0C:ED:C2:30"
