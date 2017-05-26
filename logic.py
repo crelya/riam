@@ -210,19 +210,19 @@ def notify_and_wait():
 
 def update_data(data):
     for new_tile in data:
-        tile = tile(tile_received["position"])
-        tile["end"] = tile["end"] or new_tile["end"]
-        tile["input_dir"] = new_tile["input_dir"]
+        t = tile(new_tile["position"])
+        t["end"] = t["end"] or new_tile["end"]
+        t["input_dir"] = new_tile["input_dir"]
         for direction in new_tile["output_dirs"]:
-            if not direction in tile["output_dirs"]:
-                tile["output_dirs"].append(direction)
-        for direction in tile["possible_dirs"]:
+            if not direction in t["output_dirs"]:
+                t["output_dirs"].append(direction)
+        for direction in t["possible_dirs"]:
             if not direction in new_tile["output_dirs"]:
-                tile["output_dirs"].remove(direction)
+                t["output_dirs"].remove(direction)
         for direction in new_tile["forbidden_dirs"]:
-            if not direction in tile["forbidden_dirs"]:
-                tile["forbidden_dirs"].append(direction)
-        robot["map"]["modified"].append(tile["position"])
+            if not direction in t["forbidden_dirs"]:
+                t["forbidden_dirs"].append(direction)
+        robot["map"]["modified"].append(t["position"])
 
 def clear_modified():
     robot["map"]["modified"] = []
