@@ -40,7 +40,7 @@ DISTANCE_LIMIT = 20
 STEP_TIME = 2
 
 robot = {
-    "id": 0,
+    "id": 1,
     "tile": None,
     "direction": NORTH,
     "status": WAITING,
