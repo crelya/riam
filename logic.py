@@ -255,7 +255,7 @@ def notify_and_wait():
             while True:
                 data = client_sock.recv(1024)
                 if len(data) == 0:
-                    print ("No data received")
+                    break
                 print("received [%s]" % data)
         except IOError as e:
             print "I/O error({0}): {1}".format(e.errno, e.strerror)
