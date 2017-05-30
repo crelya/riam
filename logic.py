@@ -3,6 +3,10 @@ import time
 import json
 from bluetooth import *
 
+import signal
+import sys
+
+
 VIRTUAL_SIMULATION = False
 
 if not VIRTUAL_SIMULATION:
@@ -90,6 +94,7 @@ def init_bluetooth():
 def start():
     data = None
     if (robot["type"] is MASTER):
+        server_sock = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
             client_sock, client_info = server_sock.accept()
@@ -406,8 +411,17 @@ def look_at(direction):
     else:
         look_west()
 
-# start()
-act([0,0])
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C!')
+    motors.stop()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+# print('Press Ctrl+C')
+# signal.pause()
+
+start()
+# act([0,0])
 # notify(MONITOR_BT)
 # server_sock.close()
 

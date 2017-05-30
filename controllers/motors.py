@@ -62,7 +62,7 @@ def rotate(degres):
 
 
 def stop():
-
+    init()
     print "STOPPING MOTORS"
     GPIO.output(Motor1E, GPIO.LOW)
     GPIO.output(Motor2E, GPIO.LOW)
