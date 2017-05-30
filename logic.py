@@ -6,10 +6,8 @@ from bluetooth import *
 VIRTUAL_SIMULATION = False
 
 if not VIRTUAL_SIMULATION:
-    from controllers import proximity_sensor
     from controllers import motors
     motors.init()
-    proximity_sensor.init()
 
 RIAM_1 = "00:0A:3A:6F:45:91"
 RIAM_2 = "00:1A:7D:DA:71:14"
