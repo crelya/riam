@@ -315,7 +315,15 @@ def notify(bt_info):
 
             # Create the client socket
             sock=BluetoothSocket( RFCOMM )
-            sock.connect((host, port))
+            while True:
+                try:
+                    sock.connect((host, port))
+                    break
+
+                except bluez.error as e:
+                    print("Connect error")
+
+
 
             modified_map = []
             for position in robot["map"]["modified"]:
