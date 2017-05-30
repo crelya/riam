@@ -2,13 +2,14 @@ import time
 from subprocess import call
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BOARD)
+def init():
+    GPIO.setmode(GPIO.BOARD)
 
-Trig = 11
-Echo = 13
+    Trig = 11
+    Echo = 13
 
-GPIO.setup(Trig, GPIO.OUT)
-GPIO.setup(Echo, GPIO.IN)
+    GPIO.setup(Trig, GPIO.OUT)
+    GPIO.setup(Echo, GPIO.IN)
 
 
 def check_distance():
