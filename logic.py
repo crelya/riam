@@ -70,18 +70,21 @@ robot = {
     }
 }
 
-server_sock=BluetoothSocket( RFCOMM )
-server_sock.bind(("",PORT_ANY))
-server_sock.listen(1)
+def init_bluetooth():
 
-port = server_sock.getsockname()[1]
+    server_sock=BluetoothSocket( RFCOMM )
+    server_sock.bind(("",PORT_ANY))
+    server_sock.listen(1)
+
+    port = server_sock.getsockname()[1]
 
 
-advertise_service( server_sock, "RIAM_1",
-                   service_id = robot["uuid"],
-                   service_classes = [ robot["uuid"], SERIAL_PORT_CLASS ],
-                   profiles = [ SERIAL_PORT_PROFILE ],
-                  )
+    advertise_service( server_sock, "RIAM_1",
+                       service_id = robot["uuid"],
+                       service_classes = [ robot["uuid"], SERIAL_PORT_CLASS ],
+                       profiles = [ SERIAL_PORT_PROFILE ],
+                      )
+    return server_sock
 
 
 # robot["tile"] = robot["map"]["tiles"][0]
@@ -89,7 +92,7 @@ def start():
     data = None
     if (robot["type"] is MASTER):
         while True:
-            print("Waiting for connection on RFCOMM channel %d" % port)
+            print("Waiting for connection on RFCOMM channel")
             client_sock, client_info = server_sock.accept()
             print(client_info)
             try:
@@ -246,8 +249,10 @@ def notify_and_wait():
     robot["status"] = WAITING
 
     count = 0 #TODO modify with unique array of ids to avoid duplication
+    server_sock = init_bluetooth()
     while (robot["type"] is SLAVE and count < 1) or (robot["type"] is MASTER and count < SLAVE_COUNT):
-        print("Waiting for connection on RFCOMM channel %d" % port)
+
+        print("Waiting for connection on RFCOMM channel")
         client_sock, client_info = server_sock.accept()
         print(client_info)
         try:
@@ -264,6 +269,8 @@ def notify_and_wait():
         client_sock.close()
         update_data(json.loads(data))
         count += 1
+
+    server_sock.close()
 
     count = 0
     while robot["type"] is MASTER and count < SLAVE_COUNT:
@@ -409,6 +416,6 @@ def look_at(direction):
 # start()
 act([0,0])
 # notify(MONITOR_BT)
-server_sock.close()
+# server_sock.close()
 
 print("Execution terminated")
