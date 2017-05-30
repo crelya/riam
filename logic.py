@@ -7,7 +7,7 @@ import signal
 import sys
 
 
-VIRTUAL_SIMULATION = False
+VIRTUAL_SIMULATION = True
 
 if not VIRTUAL_SIMULATION:
     from controllers import motors
