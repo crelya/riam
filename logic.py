@@ -400,7 +400,7 @@ def look_at(direction):
         look_west()
 
 start()
-
+act([])
 # notify(MONITOR_BT)
 server_sock.close()
 

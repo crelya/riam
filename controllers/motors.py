@@ -34,6 +34,7 @@ def forward(time):
     sleep(time)
 
     stop()
+    return True
 
 
 def backwards(time):
@@ -51,9 +52,12 @@ def backwards(time):
 
     stop()
 
+    return True
+
 def rotate(degres):
     #TODO rotate motor
-    pass
+    return True
+
 
 
 def stop():
