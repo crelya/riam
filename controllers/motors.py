@@ -22,7 +22,7 @@ def init():
 
 
 def forward(time):
-
+    init()
     print "Going forwards"
     GPIO.output(Motor1A, GPIO.HIGH)
     GPIO.output(Motor1B, GPIO.LOW)
@@ -39,7 +39,7 @@ def forward(time):
 
 
 def backwards(time):
-
+    init()
     print "Going backwards"
     GPIO.output(Motor1A, GPIO.LOW)
     GPIO.output(Motor1B, GPIO.HIGH)

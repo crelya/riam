@@ -7,7 +7,6 @@ VIRTUAL_SIMULATION = False
 
 if not VIRTUAL_SIMULATION:
     from controllers import motors
-    motors.init()
 
 RIAM_1 = "00:0A:3A:6F:45:91"
 RIAM_2 = "00:1A:7D:DA:71:14"
@@ -322,13 +321,7 @@ def notify(bt_info):
 
             # Create the client socket
             sock=BluetoothSocket( RFCOMM )
-            while True:
-                try:
-                    sock.connect((host, port))
-                    break
-
-                except bluez.error as e:
-                    print("Connect error")
+            sock.connect((host, port))
 
 
 
