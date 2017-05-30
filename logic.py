@@ -399,8 +399,8 @@ def look_at(direction):
     else:
         look_west()
 
-start()
-act([])
+# start()
+act([0,0])
 # notify(MONITOR_BT)
 server_sock.close()
 
