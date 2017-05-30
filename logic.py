@@ -3,7 +3,7 @@ import time
 import json
 from bluetooth import *
 
-VIRTUAL_SIMULATION = True
+VIRTUAL_SIMULATION = False
 
 if not VIRTUAL_SIMULATION:
     from controllers import proximity_sensor
