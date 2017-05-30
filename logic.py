@@ -7,7 +7,19 @@ import signal
 import sys
 
 
-VIRTUAL_SIMULATION = True
+if len(sys.argv) < 2:
+    print("Usage: python logic.py <virtual|real>")
+    sys.exit(0)
+else:
+    if sys.argv[1] == "virtual":
+        VIRTUAL_SIMULATION = True
+    elif sys.argv[1] == "real":
+        VIRTUAL_SIMULATION = False
+    else:
+        print("Usage: python logic.py <virtual|real>")
+        sys.exit(0)
+
+
 
 if not VIRTUAL_SIMULATION:
     from controllers import motors
