@@ -88,26 +88,29 @@ advertise_service( server_sock, "RIAM_1",
 # robot["tile"] = robot["map"]["tiles"][0]
 def start():
     data = None
-    while True:
-        print("Waiting for connection on RFCOMM channel %d" % port)
-        client_sock, client_info = server_sock.accept()
-        print(client_info)
-        try:
-            # while data is not None:
-            data = client_sock.recv(1024)
-            if len(data) == 0:
-                break
-            print("received [%s]" % data)
+    if (robot["type"] is MASTER):
+        while True:
+            print("Waiting for connection on RFCOMM channel %d" % port)
+            client_sock, client_info = server_sock.accept()
+            print(client_info)
+            try:
+                # while data is not None:
+                data = client_sock.recv(1024)
+                if len(data) == 0:
+                    break
+                print("received [%s]" % data)
 
-        except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            except IOError as e:
+                print "I/O error({0}): {1}".format(e.errno, e.strerror)
 
-        print("disconnected")
+            print("disconnected")
 
-        client_sock.close()
-        command = json.loads(data)
-        print(command)
-        execute_command(command)
+            client_sock.close()
+            command = json.loads(data)
+            print(command)
+            execute_command(command)
+    else:
+        execute_command({"tag": "ACT"})
 
 
 def execute_command(command):
