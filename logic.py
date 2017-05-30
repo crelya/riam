@@ -10,7 +10,9 @@ if not VIRTUAL_SIMULATION:
     from controllers import motors
 
 
-
+RIAM_1 = "00:0A:3A:6F:45:91"
+RIAM_2 = "00:1A:7D:DA:71:14"
+MEUBUNTU = "08:D4:0C:ED:C2:30"
 NORTH = "north"
 EAST = "east"
 SOUTH = "south"
@@ -25,14 +27,19 @@ SLAVE = "slave"
 SLAVE_COUNT = 1
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
-    "addr": "08:D4:0C:ED:C2:30"
+    "addr": RIAM_1
 }
 SLAVE_BTS = [
     {
         "uuid": "00000000-0000-0000-0000-000000000002",
-        "addr": "00:1A:7D:DA:71:14"
+        "addr": RIAM_2
     }
 ]
+
+MONITOR_BT = {
+    "uuid": "0003",
+    "addr": "C0:EE:FB:24:B7:B8"
+}
 
 # Distance limit to obstacle in cm
 DISTANCE_LIMIT = 20
@@ -79,6 +86,46 @@ advertise_service( server_sock, "RIAM_1",
 
 
 # robot["tile"] = robot["map"]["tiles"][0]
+def start():
+    data = None
+    while True:
+        print("Waiting for connection on RFCOMM channel %d" % port)
+        client_sock, client_info = server_sock.accept()
+        print(client_info)
+        try:
+            # while data is not None:
+            data = client_sock.recv(1024)
+            if len(data) == 0:
+                break
+            print("received [%s]" % data)
+
+        except IOError as e:
+            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+
+        print("disconnected")
+
+        client_sock.close()
+        command = json.loads(data)
+        print(command)
+        execute_command(command)
+
+
+def execute_command(command):
+    tag = command["tag"]
+    print("EXECUTING COMMAND %s" % tag)
+
+    if tag == 'ACT':
+        act([0,0])
+    elif tag == 'MOVE_FORWARD':
+        motors.forward(command["value"])
+    elif tag == 'MOVE_BACKWARDS':
+        motors.backwards(command["value"])
+    elif tag == 'CHECK_OBSTACLE':
+        proximity_sensor.check_distance()
+        #TODO send distance to monitor
+    else:
+        print("I am doing nothing")
+
 
 def act(position):
     print(position)
@@ -200,14 +247,15 @@ def notify_and_wait():
     while (robot["type"] is SLAVE and count < 1) or (robot["type"] is MASTER and count < SLAVE_COUNT):
         print("Waiting for connection on RFCOMM channel %d" % port)
         client_sock, client_info = server_sock.accept()
-
+        print(client_info)
         try:
             while True:
                 data = client_sock.recv(1024)
-                if len(data) == 0: break
+                if len(data) == 0:
+                    print ("No data received")
                 print("received [%s]" % data)
-        except IOError:
-            pass
+        except IOError as e:
+            print "I/O error({0}): {1}".format(e.errno, e.strerror)
 
         print("disconnected")
 
@@ -348,7 +396,9 @@ def look_at(direction):
     else:
         look_west()
 
-act([0,0])
-# client_sock.close()
+start()
+
+# notify(MONITOR_BT)
 server_sock.close()
+
 print("Execution terminated")
