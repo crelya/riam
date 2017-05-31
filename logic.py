@@ -113,19 +113,20 @@ def init_bluetooth():
                       )
     return server_sock
 
-
+app_client_sock = None
+app_server_sock = None
 # robot["tile"] = robot["map"]["tiles"][0]
 def start():
     data = None
     if (robot["type"] == MASTER) and not VIRTUAL_SIMULATION:
-        server_sock = init_bluetooth()
+        app_server_sock = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
-            client_sock, client_info = server_sock.accept()
+            app_client_sock, client_info = server_sock.accept()
             print(client_info)
             try:
                 # while data is not None:
-                data = client_sock.recv(1024)
+                data = app_client_sock.recv(1024)
                 if len(data) == 0:
                     break
                 # print("received [%s]" % data)
@@ -136,7 +137,6 @@ def start():
 
             print("disconnected")
 
-            client_sock.close()
             command = json.loads(data)
             print(command)
             execute_command(command)
@@ -337,6 +337,7 @@ def notify_and_wait():
         count += 1
 
     server_sock.close()
+    app_client_sock.send(json.dumps(robot["map"]))
 
     count = 0
     while robot["type"] == MASTER and count < SLAVE_COUNT:
@@ -494,6 +495,8 @@ signal.signal(signal.SIGINT, signal_handler)
 # signal.pause()
 
 start()
+app_client_sock.close()
+app_server_sock.close()
 # act([0,0])
 # notify(MONITOR_BT)
 # server_sock.close()
