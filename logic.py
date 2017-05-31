@@ -15,10 +15,18 @@ else:
         VIRTUAL_SIMULATION = True
         with open('virtual_maze.json') as data_file:
             virtual_maze = json.load(data_file)["tiles"]
+
+        for i in range(0, len(virtual_maze)):
+            tile = virtual_maze[i]
+            if tile["end"] == "true":
+                END_TILE = tile["position"]
+                break
     elif sys.argv[1] == "real":
         VIRTUAL_SIMULATION = False
         from controllers import motors
         from controllers import proximity_sensor
+        # TODO change
+        END_TILE = [3,3]
     else:
         print("Usage: python logic.py <virtual|real>")
         sys.exit(0)
@@ -31,10 +39,10 @@ else:
 RIAM_1 = "00:0A:3A:6F:45:91"
 RIAM_2 = "00:1A:7D:DA:71:14"
 MEUBUNTU = "08:D4:0C:ED:C2:30"
-NORTH = "north"
-EAST = "east"
-SOUTH = "south"
-WEST = "west"
+NORTH = "NORTH"
+EAST = "EAST"
+SOUTH = "SOUTH"
+WEST = "WEST"
 
 WAITING = "waiting"
 RUNNING = "running"
@@ -42,7 +50,7 @@ RUNNING = "running"
 MASTER = "master"
 SLAVE = "slave"
 
-SLAVE_COUNT = 1
+SLAVE_COUNT = 0
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": RIAM_1
@@ -109,7 +117,7 @@ def init_bluetooth():
 # robot["tile"] = robot["map"]["tiles"][0]
 def start():
     data = None
-    if (robot["type"] is MASTER):
+    if (robot["type"] is MASTER) and not VIRTUAL_SIMULATION:
         server_sock = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
@@ -132,6 +140,7 @@ def start():
             print(command)
             execute_command(command)
     else:
+        # print(virtual_maze[0]["position"])
         execute_command({"tag": "ACT"})
 
 
@@ -153,12 +162,15 @@ def execute_command(command):
 
 
 def act(position):
+    last_tile = robot["tile"] if robot["tile"] is not None else tile([0,0])
     print(position)
     if not position in robot["map"]["modified"]:
         robot["map"]["modified"].append(position)
     robot["tile"] = tile(position)
-    if robot["tile"]["end"] is True:
+
+    if robot["tile"]["end"] or robot["tile"]["position"] == END_TILE:
         # notify_finish() TODO
+        print("EXIT FOUND!")
         return True
     else:
         while len(robot["map"]["tiles"]) < robot["id"]:
@@ -185,11 +197,13 @@ def act(position):
                     if act(next_position(position, output_dir)):
                         return True
                     # TODO add forbidden time
-
-
         look_at(robot["tile"]["input_dir"])
         move()
+
+        robot["tile"] = last_tile
+        print(last_tile["position"])
         notify_and_wait()
+
         return False
 
 
@@ -226,6 +240,8 @@ def tile(position):
         }
         robot["map"]["tiles"].append(tile)
     return tile
+
+
 
 
 def possible_directions(input_dir):
@@ -370,13 +386,17 @@ def check(direction):
 
 
 def path_clear():
-
     #TODO gpio check if front is blocked
     if VIRTUAL_SIMULATION:
-        return True
+        for i in range(0, len(virtual_maze)):
+            tile = virtual_maze[i]
+            if tile["position"][0] is robot["tile"]["position"][0] and tile["position"][1] is robot["tile"]["position"][1]:
+                return True if robot["direction"] in tile["exits"] else False
+        return False
     else:
         obstacle_distance = proximity_sensor.check_distance()
         return obstacle_distance < DISTANCE_LIMIT
+
 
 
 def look_north():

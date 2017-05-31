@@ -57,6 +57,7 @@
       "begin": "false",
       "end": "false",
       "exits": [
+        "NORTH",
         "WEST"
       ]
     },
@@ -200,7 +201,8 @@
       "end": "false",
       "exits": [
         "NORTH",
-        "EAST"
+        "EAST",
+        "SOUTH"
       ]
     },
     {
