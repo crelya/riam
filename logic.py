@@ -154,6 +154,8 @@ def execute_command(command):
         motors.forward(command["value"])
     elif tag == 'MOVE_BACKWARDS':
         motors.backwards(command["value"])
+    elif tag == 'ROTATE_90':
+        motors.rotate(90)
     elif tag == 'CHECK_OBSTACLE':
         proximity_sensor.check_distance()
         #TODO send distance to monitor
