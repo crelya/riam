@@ -117,7 +117,7 @@ def init_bluetooth():
 # robot["tile"] = robot["map"]["tiles"][0]
 def start():
     data = None
-    if (robot["type"] is MASTER) and not VIRTUAL_SIMULATION:
+    if (robot["type"] == MASTER) and not VIRTUAL_SIMULATION:
         server_sock = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
@@ -210,11 +210,11 @@ def act(position):
 
 
 def next_position(position, direction):
-    if direction is NORTH:
+    if direction == NORTH:
         return [position[0], position[1] + 1]
-    elif direction is EAST:
+    elif direction == EAST:
         return [position[0] + 1, position[1]]
-    elif direction is SOUTH:
+    elif direction == SOUTH:
         return [position[0], position[1] - 1]
     else:
         return [position[0] - 1, position[1]]
@@ -224,7 +224,7 @@ def tile(position):
     exists = False
     for i in range(0, len(robot["map"]["tiles"])):
         tile = robot["map"]["tiles"][i];
-        if tile["position"][0] is position[0] and tile["position"][1] is position[1]:
+        if tile["position"][0] == position[0] and tile["position"][1] == position[1]:
             exists = True
             break
 
@@ -251,44 +251,44 @@ def possible_directions(input_dir):
 
 
 def opposite(direction):
-    if direction is NORTH:
+    if direction == NORTH:
         return SOUTH
-    elif direction is EAST:
+    elif direction == EAST:
         return WEST
-    elif direction is SOUTH:
+    elif direction == SOUTH:
         return NORTH
     else:
         return EAST
 
 def left(direction):
-    if direction is NORTH:
+    if direction == NORTH:
         return WEST
-    elif direction is EAST:
+    elif direction == EAST:
         return NORTH
-    elif direction is SOUTH:
+    elif direction == SOUTH:
         return EAST
     else:
         return SOUTH
 
 def right(direction):
-    if direction is NORTH:
+    if direction == NORTH:
         return EAST
-    elif direction is EAST:
+    elif direction == EAST:
         return SOUTH
-    elif direction is SOUTH:
+    elif direction == SOUTH:
         return WEST
     else:
         return NORTH
 
 
 def notify_and_wait():
-    if robot["type"] is SLAVE:
+    if robot["type"] == SLAVE:
         notify(MASTER_BT)
     robot["status"] = WAITING
 
     count = 0 #TODO modify with unique array of ids to avoid duplication
     server_sock = init_bluetooth()
-    while (robot["type"] is SLAVE and count < 1) or (robot["type"] is MASTER and count < SLAVE_COUNT):
+    while (robot["type"] == SLAVE and count < 1) or (robot["type"] == MASTER and count < SLAVE_COUNT):
 
         print("Waiting for connection on RFCOMM channel")
         client_sock, client_info = server_sock.accept()
@@ -311,7 +311,7 @@ def notify_and_wait():
     server_sock.close()
 
     count = 0
-    while robot["type"] is MASTER and count < SLAVE_COUNT:
+    while robot["type"] == MASTER and count < SLAVE_COUNT:
         notify(SLAVE_BTS[count])
         count += 1
 
@@ -388,11 +388,11 @@ def check(direction):
 
 
 def path_clear():
-    #TODO gpio check if front is blocked
+    #TODO gpio check if front == blocked
     if VIRTUAL_SIMULATION:
         for i in range(0, len(virtual_maze)):
             tile = virtual_maze[i]
-            if tile["position"][0] is robot["tile"]["position"][0] and tile["position"][1] is robot["tile"]["position"][1]:
+            if tile["position"][0] == robot["tile"]["position"][0] and tile["position"][1] == robot["tile"]["position"][1]:
                 return True if robot["direction"] in tile["exits"] else False
         return False
     else:
