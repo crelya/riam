@@ -24,13 +24,8 @@ def init():
 def forward(time):
     init()
     print "Going forwards"
-    GPIO.output(Motor1A, GPIO.HIGH)
-    GPIO.output(Motor1B, GPIO.LOW)
-    GPIO.output(Motor1E, GPIO.HIGH)
-
-    GPIO.output(Motor2A, GPIO.LOW)
-    GPIO.output(Motor2B, GPIO.HIGH)
-    GPIO.output(Motor2E, GPIO.HIGH)
+    motor_right_forward()
+    motor_left_forward()
 
     sleep(time)
 
@@ -41,13 +36,9 @@ def forward(time):
 def backwards(time):
     init()
     print "Going backwards"
-    GPIO.output(Motor1A, GPIO.LOW)
-    GPIO.output(Motor1B, GPIO.HIGH)
-    GPIO.output(Motor1E, GPIO.HIGH)
 
-    GPIO.output(Motor2A, GPIO.HIGH)
-    GPIO.output(Motor2B, GPIO.LOW)
-    GPIO.output(Motor2E, GPIO.HIGH)
+    motor_right_backwards()
+    motor_left_backwards()
 
     sleep(time)
 
@@ -55,11 +46,49 @@ def backwards(time):
 
     return True
 
-def rotate(degres):
-    #TODO rotate motor
+def motor_right_forward():
+
+    GPIO.output(Motor1A, GPIO.HIGH)
+    GPIO.output(Motor1B, GPIO.LOW)
+    GPIO.output(Motor1E, GPIO.HIGH)
+
+def motor_right_backwards():
+
+    GPIO.output(Motor1A, GPIO.LOW)
+    GPIO.output(Motor1B, GPIO.HIGH)
+    GPIO.output(Motor1E, GPIO.HIGH)
+
+def motor_left_forward():
+
+    GPIO.output(Motor2A, GPIO.LOW)
+    GPIO.output(Motor2B, GPIO.HIGH)
+    GPIO.output(Motor2E, GPIO.HIGH)
+
+def motor_left_backwards():
+
+    GPIO.output(Motor2A, GPIO.HIGH)
+    GPIO.output(Motor2B, GPIO.LOW)
+    GPIO.output(Motor2E, GPIO.HIGH)
+
+def rotate(degrees):
+
+    if degrees <= 90:
+        motor_right_backwards()
+        motor_left_forward()
+    else:
+        motor_right_forward()
+        motor_left_backwards()
+
+    seconds = time_for_degrees(degrees)
+
+    sleep(seconds)
+
     return True
 
 
+def time_for_degrees(degrees):
+    #TODO calculate time
+    return 1
 
 def stop():
     init()
