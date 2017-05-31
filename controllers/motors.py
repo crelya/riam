@@ -71,8 +71,8 @@ def motor_left_backwards():
     GPIO.output(Motor2E, GPIO.HIGH)
 
 def rotate(degrees):
-
-    if degrees <= 90:
+    init()
+    if degrees <= 90 and degrees >=0:
         motor_right_backwards()
         motor_left_forward()
     else:
