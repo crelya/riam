@@ -128,10 +128,11 @@ def start():
                 data = client_sock.recv(1024)
                 if len(data) == 0:
                     break
-                print("received [%s]" % data)
+                # print("received [%s]" % data)
 
             except IOError as e:
-                print "I/O error({0}): {1}".format(e.errno, e.strerror)
+                # print "I/O error({0}): {1}".format(e.errno, e.strerror)
+                pass
 
             print("disconnected")
 
@@ -324,9 +325,10 @@ def notify_and_wait():
                 data = client_sock.recv(1024)
                 if len(data) == 0:
                     break
-                print("received [%s]" % data)
+                # print("received [%s]" % data)
         except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            # print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            pass
 
         print("disconnected")
 
@@ -353,14 +355,17 @@ def update_data(data):
         for direction in new_tile["output_dirs"]:
             if not direction in robot["map"]["tiles"][idx]["output_dirs"]:
                 robot["map"]["tiles"][idx]["output_dirs"].append(direction)
+        cpy = robot["map"]["tiles"][idx]["possible_dirs"][:]
         for direction in robot["map"]["tiles"][idx]["possible_dirs"]:
             if not direction in new_tile["possible_dirs"]:
-                robot["map"]["tiles"][idx]["possible_dirs"].remove(direction)
+                cpy.remove(direction)
+        robot["map"]["tiles"][idx]["possible_dirs"] = cpy
         for direction in new_tile["forbidden_dirs"]:
             if not direction in robot["map"]["tiles"][idx]["forbidden_dirs"]:
                 robot["map"]["tiles"][idx]["forbidden_dirs"].append(direction)
         if not robot["map"]["tiles"][idx]["position"] in robot["map"]["modified"]:
             robot["map"]["modified"].append(robot["map"]["tiles"][idx]["position"])
+    # print(robot["map"]["tiles"])
 
 
 
