@@ -87,8 +87,7 @@ def rotate(degrees):
 
 
 def time_for_degrees(degrees):
-    #TODO calculate time
-    return 1
+    return 0.1 * degrees / 90
 
 def stop():
     init()
