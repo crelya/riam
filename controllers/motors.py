@@ -82,7 +82,7 @@ def rotate(degrees):
     seconds = time_for_degrees(degrees)
 
     sleep(seconds)
-
+    stop()
     return True
 
 
