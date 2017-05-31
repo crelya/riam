@@ -9,6 +9,8 @@ Motor2A = 19
 Motor2B = 21
 Motor2E = 23
 
+TIME_90_DEGREES = 0.2
+
 def init():
     GPIO.setmode(GPIO.BOARD)
 
@@ -87,7 +89,7 @@ def rotate(degrees):
 
 
 def time_for_degrees(degrees):
-    return 0.1 * degrees / 90
+    return TIME_90_DEGREES * degrees / 90
 
 def stop():
     init()
