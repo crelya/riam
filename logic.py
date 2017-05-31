@@ -402,51 +402,51 @@ def path_clear():
 
 
 def look_north():
-    if robot["direction"] is EAST:
+    if robot["direction"] == EAST:
         rotate(90)
-    elif robot["direction"] is SOUTH:
+    elif robot["direction"] == SOUTH:
         rotate(180)
-    elif robot["direction"] is WEST:
+    elif robot["direction"] == WEST:
         rotate(-90)
     robot["direction"] = NORTH
 
 
 def look_east():
-    if robot["direction"] is SOUTH:
+    if robot["direction"] == SOUTH:
         rotate(90)
-    elif robot["direction"] is WEST:
+    elif robot["direction"] == WEST:
         rotate(180)
-    elif robot["direction"] is NORTH:
+    elif robot["direction"] == NORTH:
         rotate(-90)
     robot["direction"] = EAST
 
 
 def look_south():
-    if robot["direction"] is WEST:
+    if robot["direction"] == WEST:
         rotate(90)
-    elif robot["direction"] is NORTH:
+    elif robot["direction"] == NORTH:
         rotate(180)
-    elif robot["direction"] is EAST:
+    elif robot["direction"] == EAST:
         rotate(-90)
     robot["direction"] = SOUTH
 
 
 def look_west():
-    if robot["direction"] is SOUTH:
+    if robot["direction"] == SOUTH:
         rotate(90)
-    elif robot["direction"] is EAST:
+    elif robot["direction"] == EAST:
         rotate(180)
-    elif robot["direction"] is NORTH:
+    elif robot["direction"] == NORTH:
         rotate(-90)
     robot["direction"] = WEST
 
 
 def look_at(direction):
-    if direction is NORTH:
+    if direction == NORTH:
         look_north()
-    elif direction is EAST:
+    elif direction == EAST:
         look_east()
-    elif direction is SOUTH:
+    elif direction == SOUTH:
         look_south()
     else:
         look_west()
