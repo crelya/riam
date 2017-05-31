@@ -50,7 +50,7 @@ RUNNING = "running"
 MASTER = "master"
 SLAVE = "slave"
 
-SLAVE_COUNT = 0
+SLAVE_COUNT = 1
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": RIAM_1
@@ -164,11 +164,11 @@ def execute_command(command):
 
 
 def act(position):
-    last_tile = robot["tile"] if robot["tile"] is not None else tile([0,0])
+    last_tile = robot["tile"] if robot["tile"] is not None else get_tile(position)
     print(position)
     if not position in robot["map"]["modified"]:
         robot["map"]["modified"].append(position)
-    robot["tile"] = tile(position)
+    robot["tile"] = get_tile(position)
 
     if robot["tile"]["end"] or robot["tile"]["position"] == END_TILE:
         # notify_finish() TODO
@@ -220,7 +220,7 @@ def next_position(position, direction):
         return [position[0] - 1, position[1]]
 
 
-def tile(position):
+def get_tile(position):
     exists = False
     for i in range(0, len(robot["map"]["tiles"])):
         tile = robot["map"]["tiles"][i];
@@ -243,6 +243,32 @@ def tile(position):
         robot["map"]["tiles"].append(tile)
     return tile
 
+def get_tile_idx(position):
+    exists = False
+    idx = -1
+    for i in range(0, len(robot["map"]["tiles"])):
+        tile = robot["map"]["tiles"][i];
+        if tile["position"][0] == position[0] and tile["position"][1] == position[1]:
+            idx = i
+            exists = True
+            break
+
+
+    if not exists:
+        tile = {
+            "position": position,
+            "begin": False,
+            "end": False,
+            "input_dir": [opposite(robot["direction"])],
+            "output_dirs": [],
+            "taken_dirs": [],
+            "possible_dirs": possible_directions(robot["direction"]),
+            "forbidden_dirs": []
+        }
+        robot["map"]["tiles"].append(tile)
+        idx = len(robot["map"]["tiles"]) - 1
+
+    return idx
 
 
 
@@ -321,20 +347,22 @@ def notify_and_wait():
 
 def update_data(data):
     for new_tile in data:
-        t = tile(new_tile["position"])
-        t["end"] = t["end"] or new_tile["end"]
-        t["input_dir"] = new_tile["input_dir"]
+        idx = get_tile_idx(new_tile["position"])
+        robot["map"]["tiles"][idx]["end"] = robot["map"]["tiles"][idx]["end"] or new_tile["end"]
+        robot["map"]["tiles"][idx]["input_dir"] = new_tile["input_dir"]
         for direction in new_tile["output_dirs"]:
-            if not direction in t["output_dirs"]:
-                t["output_dirs"].append(direction)
-        for direction in t["possible_dirs"]:
+            if not direction in robot["map"]["tiles"][idx]["output_dirs"]:
+                robot["map"]["tiles"][idx]["output_dirs"].append(direction)
+        for direction in robot["map"]["tiles"][idx]["possible_dirs"]:
             if not direction in new_tile["possible_dirs"]:
-                t["possible_dirs"].remove(direction)
+                robot["map"]["tiles"][idx]["possible_dirs"].remove(direction)
         for direction in new_tile["forbidden_dirs"]:
-            if not direction in t["forbidden_dirs"]:
-                t["forbidden_dirs"].append(direction)
-        if not t["position"] in robot["map"]["modified"]:
-            robot["map"]["modified"].append(t["position"])
+            if not direction in robot["map"]["tiles"][idx]["forbidden_dirs"]:
+                robot["map"]["tiles"][idx]["forbidden_dirs"].append(direction)
+        if not robot["map"]["tiles"][idx]["position"] in robot["map"]["modified"]:
+            robot["map"]["modified"].append(robot["map"]["tiles"][idx]["position"])
+
+
 
 def clear_modified():
     robot["map"]["modified"] = []
@@ -366,7 +394,7 @@ def notify(bt_info):
 
             modified_map = []
             for position in robot["map"]["modified"]:
-                modified_map.append(tile(position))
+                modified_map.append(get_tile(position))
 
             sock.send(json.dumps(modified_map)) #'{"foo": "bar"}'
 
