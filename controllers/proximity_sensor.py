@@ -13,6 +13,8 @@ def init():
 
 
 def check_distance():
+    init()
+
     GPIO.output(Trig, False)
     time.sleep(2*10**-6)
     GPIO.output(Trig, True)

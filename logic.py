@@ -13,16 +13,20 @@ if len(sys.argv) < 2:
 else:
     if sys.argv[1] == "virtual":
         VIRTUAL_SIMULATION = True
+        with open('virtual_maze.json') as data_file:
+            virtual_maze = json.load(data_file)["tiles"]
     elif sys.argv[1] == "real":
         VIRTUAL_SIMULATION = False
+        from controllers import motors
+        from controllers import proximity_sensor
     else:
         print("Usage: python logic.py <virtual|real>")
         sys.exit(0)
 
 
 
-if not VIRTUAL_SIMULATION:
-    from controllers import motors
+
+
 
 RIAM_1 = "00:0A:3A:6F:45:91"
 RIAM_2 = "00:1A:7D:DA:71:14"
@@ -368,9 +372,11 @@ def check(direction):
 def path_clear():
 
     #TODO gpio check if front is blocked
-    # obstacle_distance = proximity_sensor.check_distance()
-    # return obstacle_distance < DISTANCE_LIMIT
-    return True
+    if VIRTUAL_SIMULATION:
+        return True
+    else:
+        obstacle_distance = proximity_sensor.check_distance()
+        return obstacle_distance < DISTANCE_LIMIT
 
 
 def look_north():
