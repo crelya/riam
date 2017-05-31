@@ -122,7 +122,7 @@ def start():
         app_server_sock = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
-            app_client_sock, client_info = server_sock.accept()
+            app_client_sock, client_info = app_server_sock.accept()
             print(client_info)
             try:
                 # while data is not None:
