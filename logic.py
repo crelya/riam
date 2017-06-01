@@ -170,6 +170,10 @@ def execute_command(command):
     print("EXECUTING COMMAND %s" % tag)
 
     if tag == 'ACT':
+        if robot["type"] == MASTER:
+            notify_start()
+        else:
+            wait_start()
         act([0,0])
     elif tag == 'MOVE_FORWARD':
         motors.forward(command["value"])
@@ -327,6 +331,30 @@ def right(direction):
     else:
         return NORTH
 
+def notify_start():
+    while count < SLAVE_COUNT:
+        notify(SLAVE_BTS[count], "start")
+        count += 1
+
+def wait_start():
+    server_sock = init_bluetooth()
+    print("Waiting for start message")
+    client_sock, client_info = server_sock.accept()
+    print(client_info)
+    try:
+        while True:
+            data = client_sock.recv(1024)
+            if len(data) == 0:
+                break
+            # print("received [%s]" % data)
+    except IOError as e:
+        # print "I/O error({0}): {1}".format(e.errno, e.strerror)
+        pass
+
+    print("disconnected")
+
+    client_sock.close()
+    server_sock.close()
 
 def notify_and_wait():
     if robot["type"] == SLAVE:
