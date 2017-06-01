@@ -540,7 +540,8 @@ def look_at(direction):
 
 def signal_handler(signal, frame):
     print('You pressed Ctrl+C!')
-    motors.stop()
+    if not VIRTUAL_SIMULATION:
+        motors.stop()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -548,8 +549,10 @@ signal.signal(signal.SIGINT, signal_handler)
 # signal.pause()
 
 start()
-app["client"].close()
-app["server"].close()
+
+if MONITOR_COUNT > 0:
+    app["client"].close()
+    app["server"].close()
 # act([0,0])
 # notify(MONITOR_BT)
 # server_sock.close()
