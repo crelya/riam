@@ -7,8 +7,8 @@ import signal
 import sys
 
 
-if len(sys.argv) < 2:
-    print("Usage: python logic.py <virtual|real>")
+if len(sys.argv) < 5:
+    print("Usage: python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>")
     sys.exit(0)
 else:
     if sys.argv[1] == "virtual":
@@ -28,12 +28,24 @@ else:
         # TODO change
         END_TILE = [3,3]
     else:
-        print("Usage: python logic.py <virtual|real>")
+        print("Usage: python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>")
         sys.exit(0)
 
+    if sys.argv[2] == "app":
+        APP_MODE = True
+    elif sys.argv[2] == "noapp":
+        APP_MODE = False
+    else:
+        print("Usage: python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>")
+        sys.exit(0)
 
+    if sys.argv[3] > 0:
+        ROBOT_ID = int(sys.argv[3])
+    else:
+        print("Usage: python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>")
+        sys.exit(0)
 
-
+    SLAVE_COUNT = int(sys.argv[4])
 
 
 RIAM_1 = "00:0A:3A:6F:45:91"
@@ -50,7 +62,7 @@ RUNNING = "running"
 MASTER = "master"
 SLAVE = "slave"
 
-SLAVE_COUNT = 1
+# SLAVE_COUNT = 1
 MONITOR_COUNT = 0
 
 MASTER_BT = {
@@ -73,7 +85,7 @@ MONITOR_BT = {
 DISTANCE_LIMIT = 20
 
 STEP_TIME = 0.38
-ROBOT_ID = 1
+# ROBOT_ID = 1
 
 robot = {
     "id": ROBOT_ID,

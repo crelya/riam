@@ -81,7 +81,7 @@ def rotate(degrees):
         motor_right_forward()
         motor_left_backwards()
 
-    seconds = time_for_degrees(degrees)
+    seconds = time_for_degrees(abs(degrees))
 
     sleep(seconds)
     stop()
