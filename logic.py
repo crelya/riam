@@ -360,7 +360,7 @@ def notify_and_wait():
     if robot["type"] == MASTER:
         notify_data = json.dumps(modified_map())
         if MONITOR_COUNT > 0:
-            app["client"].send("%s$" % notify_data)
+            app["client"].send("%s\n" % notify_data)
 
         count = 0
         while count < SLAVE_COUNT:
