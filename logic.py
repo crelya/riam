@@ -51,6 +51,8 @@ MASTER = "master"
 SLAVE = "slave"
 
 SLAVE_COUNT = 1
+MONITOR_COUNT = 0
+
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
     "addr": RIAM_1
@@ -128,6 +130,7 @@ def start():
         while True:
             print("Waiting for connection on RFCOMM channel")
             app["client"], client_info = app["server"].accept()
+            MONITOR_COUNT = 1
             print(client_info)
             try:
                 # while data is not None:
@@ -315,7 +318,7 @@ def right(direction):
 
 def notify_and_wait():
     if robot["type"] == SLAVE:
-        notify(MASTER_BT)
+        notify(MASTER_BT, json.dumps(modified_map()))
     robot["status"] = WAITING
 
     count = 0 #TODO modify with unique array of ids to avoid duplication
@@ -340,14 +343,17 @@ def notify_and_wait():
         client_sock.close()
         update_data(json.loads(data))
         count += 1
-
     server_sock.close()
-    app["client"].send(json.dumps(robot["map"]))
 
-    count = 0
-    while robot["type"] == MASTER and count < SLAVE_COUNT:
-        notify(SLAVE_BTS[count])
-        count += 1
+    if robot["type"] == MASTER:
+        notify_data = json.dumps("%s\n" % modified_map())
+        if MONITOR_COUNT > 0:
+            app["client"].send(notify_data)
+
+        count = 0
+        while count < SLAVE_COUNT:
+            notify(SLAVE_BTS[count], notify_data)
+            count += 1
 
     clear_modified()
     robot["status"] = RUNNING
@@ -379,7 +385,13 @@ def clear_modified():
     robot["map"]["modified"] = []
 
 
-def notify(bt_info):
+def modified_map():
+    modified_map = []
+    for position in robot["map"]["modified"]:
+        modified_map.append(get_tile(position))
+    return modified_map
+
+def notify(bt_info, data):
     uuid = bt_info["uuid"]
     addr = bt_info["addr"]
     while True:
@@ -401,13 +413,7 @@ def notify(bt_info):
             sock=BluetoothSocket( RFCOMM )
             sock.connect((host, port))
 
-
-
-            modified_map = []
-            for position in robot["map"]["modified"]:
-                modified_map.append(get_tile(position))
-
-            sock.send(json.dumps(modified_map)) #'{"foo": "bar"}'
+            sock.send(json.dumps(data)) #'{"foo": "bar"}'
 
             sock.close()
             break
