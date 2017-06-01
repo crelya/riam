@@ -332,6 +332,7 @@ def right(direction):
         return NORTH
 
 def notify_start():
+    count = 0
     while count < SLAVE_COUNT:
         notify(SLAVE_BTS[count], "start")
         count += 1
