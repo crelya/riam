@@ -360,7 +360,7 @@ def wait_start():
 
 def notify_and_wait():
     if robot["type"] == SLAVE:
-        notify(MASTER_BT, json.dumps(modified_map()))
+        notify(MASTER_BT, modified_map())
     robot["status"] = WAITING
 
     count = 0 #TODO modify with unique array of ids to avoid duplication
@@ -388,7 +388,7 @@ def notify_and_wait():
     server_sock.close()
 
     if robot["type"] == MASTER:
-        notify_data = json.dumps(modified_map())
+        notify_data = modified_map()
         if MONITOR_COUNT > 0:
             app["client"].send("%s\n" % notify_data)
 
