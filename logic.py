@@ -360,14 +360,14 @@ def wait_start():
 
 def notify_and_wait():
     if robot["type"] == SLAVE:
+        print("[notify_and_wait - %d] Sending info to master" % ROBOT_ID)
         notify(MASTER_BT, modified_map())
     robot["status"] = WAITING
 
     count = 0 #TODO modify with unique array of ids to avoid duplication
     server_sock = init_bluetooth()
     while (robot["type"] == SLAVE and count < 1) or (robot["type"] == MASTER and count < SLAVE_COUNT):
-
-        print("Waiting for connection on RFCOMM channel")
+        print("[notify_and_wait - %d] Waiting for info update" % ROBOT_ID)
         client_sock, client_info = server_sock.accept()
         print(client_info)
         try:
@@ -380,7 +380,7 @@ def notify_and_wait():
             # print "I/O error({0}): {1}".format(e.errno, e.strerror)
             pass
 
-        print("disconnected")
+        print("[notify_and_wait - %d] Disconnected" % ROBOT_ID)
 
         client_sock.close()
         update_data(json.loads(data))
@@ -390,10 +390,12 @@ def notify_and_wait():
     if robot["type"] == MASTER:
         notify_data = modified_map()
         if MONITOR_COUNT > 0:
+            print("[notify_and_wait - %d] Sending info to monitor" % ROBOT_ID)
             app["client"].send("%s\n" % notify_data)
 
         count = 0
         while count < SLAVE_COUNT:
+            print("[notify_and_wait - %d] Sending info to slave" % ROBOT_ID)
             notify(SLAVE_BTS[count], notify_data)
             count += 1
 
@@ -440,7 +442,7 @@ def notify(bt_info, data):
         service_matches = find_service(uuid=uuid, address=addr)
 
         if len(service_matches) == 0:
-            print("Couldn't notify. Retrying...")
+            print("[notify - %d] Couldn't notify. Retrying..." % ROBOT_ID)
             time.sleep(0.2)
         else:
 
@@ -449,12 +451,13 @@ def notify(bt_info, data):
             name = first_match["name"]
             host = first_match["host"]
 
-            print("connecting to \"%s\" on %s" % (name, host))
+            print("[notify - %d] connecting to \"%s\" on %s" % (ROBOT_ID, name, host))
 
             # Create the client socket
             sock=BluetoothSocket( RFCOMM )
             sock.connect((host, port))
 
+            print("[notify - %d] Sending data" % ROBOT_ID)
             sock.send(json.dumps(data)) #'{"foo": "bar"}'
 
             sock.close()
