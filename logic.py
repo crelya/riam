@@ -33,8 +33,10 @@ else:
 
     if sys.argv[2] == "app":
         APP_MODE = True
+        MONITOR_COUNT = 1
     elif sys.argv[2] == "noapp":
         APP_MODE = False
+        MONITOR_COUNT = 0
     else:
         print("Usage: python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>")
         sys.exit(0)
@@ -138,7 +140,6 @@ def start():
     data = None
     if (robot["type"] == MASTER) and APP_MODE:
         app["server"] = init_bluetooth()
-        MONITOR_COUNT = 1
         while True:
             print("Waiting for connection on RFCOMM channel")
             app["client"], client_info = app["server"].accept()
@@ -161,7 +162,6 @@ def start():
             execute_command(command)
     else:
         # print(virtual_maze[0]["position"])
-        MONITOR_COUNT = 0
         execute_command({"tag": "ACT"})
 
 
