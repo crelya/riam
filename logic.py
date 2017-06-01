@@ -143,6 +143,7 @@ def start():
         while True:
             print("Waiting for connection on RFCOMM channel")
             app["client"], client_info = app["server"].accept()
+            stop_advertising(app["server"])
             print(client_info)
             try:
                 # while data is not None:
