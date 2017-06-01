@@ -63,7 +63,6 @@ MASTER = "master"
 SLAVE = "slave"
 
 # SLAVE_COUNT = 1
-MONITOR_COUNT = 0
 
 MASTER_BT = {
     "uuid": "00000000-0000-0000-0000-000000000001",
@@ -139,10 +138,10 @@ def start():
     data = None
     if (robot["type"] == MASTER) and APP_MODE:
         app["server"] = init_bluetooth()
+        MONITOR_COUNT = 1
         while True:
             print("Waiting for connection on RFCOMM channel")
             app["client"], client_info = app["server"].accept()
-            MONITOR_COUNT = 1
             print(client_info)
             try:
                 # while data is not None:
@@ -162,6 +161,7 @@ def start():
             execute_command(command)
     else:
         # print(virtual_maze[0]["position"])
+        MONITOR_COUNT = 0
         execute_command({"tag": "ACT"})
 
 
