@@ -137,7 +137,7 @@ app["server"] = None
 # robot["tile"] = robot["map"]["tiles"][0]
 def start():
     data = None
-    if (robot["type"] == MASTER) and not VIRTUAL_SIMULATION:
+    if (robot["type"] == MASTER) and APP_MODE:
         app["server"] = init_bluetooth()
         while True:
             print("Waiting for connection on RFCOMM channel")
