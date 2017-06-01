@@ -141,7 +141,7 @@ def start():
     if (robot["type"] == MASTER) and APP_MODE:
         app["server"] = init_bluetooth()
         while True:
-            print("Waiting for connection on RFCOMM channel")
+            print("[start] Waiting for connection from App")
             app["client"], client_info = app["server"].accept()
             stop_advertising(app["server"])
             print(client_info)
@@ -156,7 +156,7 @@ def start():
                 # print "I/O error({0}): {1}".format(e.errno, e.strerror)
                 pass
 
-            print("disconnected")
+            print("Disconnected")
 
             command = json.loads(data)
             print(command)
@@ -173,7 +173,7 @@ def execute_command(command):
     if tag == 'ACT':
         if robot["type"] == MASTER and SLAVE_COUNT > 0:
             notify_start()
-        else:
+        elif robot["type"] == SLAVE:
             wait_start()
         act([0,0])
     elif tag == 'MOVE_FORWARD':
