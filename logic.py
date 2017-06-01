@@ -392,7 +392,7 @@ def notify_and_wait():
         notify_data = modified_map()
         if MONITOR_COUNT > 0:
             print("[notify_and_wait - %d] Sending info to monitor" % ROBOT_ID)
-            app["client"].send("%s\n" % notify_data)
+            app["client"].send("%s\n" % json.dumps(notify_data))
 
         count = 0
         while count < SLAVE_COUNT:
