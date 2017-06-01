@@ -170,7 +170,7 @@ def execute_command(command):
     print("EXECUTING COMMAND %s" % tag)
 
     if tag == 'ACT':
-        if robot["type"] == MASTER:
+        if robot["type"] == MASTER and SLAVE_COUNT > 0:
             notify_start()
         else:
             wait_start()
@@ -334,6 +334,7 @@ def right(direction):
 def notify_start():
     count = 0
     while count < SLAVE_COUNT:
+        print("Notify start")
         notify(SLAVE_BTS[count], "start")
         count += 1
 
@@ -347,7 +348,7 @@ def wait_start():
             data = client_sock.recv(1024)
             if len(data) == 0:
                 break
-            # print("received [%s]" % data)
+            print("received [%s]" % data)
     except IOError as e:
         # print "I/O error({0}): {1}".format(e.errno, e.strerror)
         pass
