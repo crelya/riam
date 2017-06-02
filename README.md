@@ -2,7 +2,8 @@
 *A project by Rodrigo Crespo & Meriem El Yamri*
 
 This project is the server part of the project Rasp in a Maze, 
-a hardware+software project where two or more motorized raspberries work together to get out of a maze.
+a hardware+software project where two or more motorized raspberries work together to get out of a maze, 
+using a **distributed backtracking algorithm**.
 
 To make it work with the app, you need to install the APP:
 https://github.com/crelya/riam_monitor
@@ -48,3 +49,14 @@ pip install -r requirements.txt
 ```
 python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>"
 ```
+
+## Activity diagrams
+These are some activity diagrams so you can understand how the **distributed backtracking** algorithm works.
+
+![alt text](https://github.com/crelya/riam/raw/master/1.png "Diagram 1")
+
+![alt text](https://github.com/crelya/riam/raw/master/2.png "Diagram 2")
+
+![alt text](https://github.com/crelya/riam/raw/master/3.png "Diagram 3")
+
+![alt text](https://github.com/crelya/riam/raw/master/4.png "Diagram 4")
