@@ -497,7 +497,7 @@ def path_clear():
         return False
     else:
         obstacle_distance = proximity_sensor.check_distance()
-        return obstacle_distance < DISTANCE_LIMIT
+        return obstacle_distance > DISTANCE_LIMIT
 
 
 
