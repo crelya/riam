@@ -20,6 +20,9 @@ def check_distance():
     time.sleep(10*10**-6)
     GPIO.output(Trig, False)
 
+    start = 0
+    end = 0
+    
     while GPIO.input(Echo) == 0:
         start = time.time()
 
