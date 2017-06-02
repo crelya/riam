@@ -184,8 +184,8 @@ def execute_command(command):
         motors.forward(command["value"])
     elif tag == 'MOVE_BACKWARDS':
         motors.backwards(command["value"])
-    elif tag == 'ROTATE_90':
-        motors.rotate(90)
+    elif tag == 'ROTATE':
+        motors.rotate(command["value"])
     elif tag == 'CHECK_OBSTACLE':
         distance = proximity_sensor.check_distance()
         app["client"].send("%s\n" % json.dumps({"distance": distance}))
