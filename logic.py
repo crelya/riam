@@ -32,7 +32,7 @@ else:
         sys.exit(0)
 
     if sys.argv[2] == "app":
-        
+
         from controllers import proximity_sensor
         APP_MODE = True
         MONITOR_COUNT = 1
@@ -144,7 +144,8 @@ def start():
         app["server"] = init_bluetooth()
         while True:
             print("[start] Waiting for connection from App")
-            app["client"], client_info = app["server"].accept()
+            if app["client"] is None:
+                app["client"], client_info = app["server"].accept()
             stop_advertising(app["server"])
             print(client_info)
             try:

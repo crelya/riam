@@ -7,9 +7,6 @@ Echo = 13
 
 def init():
     GPIO.setmode(GPIO.BOARD)
-
-
-
     GPIO.setup(Trig, GPIO.OUT)
     GPIO.setup(Echo, GPIO.IN)
 
@@ -31,6 +28,8 @@ def check_distance():
 
     duration = (end - start) * 10**6
     distance = duration / 58
+
+    GPIO.cleanup()
 
     print "%.2f" % distance
     return distance
