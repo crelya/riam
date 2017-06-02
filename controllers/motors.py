@@ -9,7 +9,7 @@ Motor2A = 19
 Motor2B = 21
 Motor2E = 23
 
-TIME_90_DEGREES = 0.2
+TIME_90_DEGREES = 0.4
 
 def init():
     GPIO.setmode(GPIO.BOARD)

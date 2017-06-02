@@ -22,7 +22,7 @@ def check_distance():
 
     start = 0
     end = 0
-    
+
     while GPIO.input(Echo) == 0:
         start = time.time()
 
