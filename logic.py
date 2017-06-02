@@ -141,11 +141,11 @@ app["server"] = None
 def start():
     data = None
     if (robot["type"] == MASTER) and APP_MODE:
-        app["server"] = init_bluetooth()
+        if app["server"] is None:
+            app["server"] = init_bluetooth()
         while True:
             print("[start] Waiting for connection from App")
-            if app["client"] is None:
-                app["client"], client_info = app["server"].accept()
+            app["client"], client_info = app["server"].accept()
             stop_advertising(app["server"])
             print(client_info)
             try:
@@ -159,7 +159,7 @@ def start():
                 # print "I/O error({0}): {1}".format(e.errno, e.strerror)
                 pass
 
-            print("Disconnected")
+            # print("Disconnected")
 
             command = json.loads(data)
             print(command)
