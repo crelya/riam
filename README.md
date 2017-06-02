@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 ## Run
 ```
-python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>"
+python logic.py <virtual|real> <app|noapp> <robot-id> <slave-count>
 ```
 
 ## Activity diagrams
