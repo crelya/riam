@@ -153,7 +153,7 @@ def start():
                 data = app["client"].recv(1024)
                 if len(data) == 0:
                     break
-                # print("received [%s]" % data)
+                print("START received [%s]" % data)
 
             except IOError as e:
                 # print "I/O error({0}): {1}".format(e.errno, e.strerror)
