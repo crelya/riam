@@ -145,7 +145,8 @@ def start():
             app["server"] = init_bluetooth()
         while True:
             print("[start] Waiting for connection from App")
-            app["client"], client_info = app["server"].accept()
+            if app["client"] is None:
+                app["client"], client_info = app["server"].accept()
             stop_advertising(app["server"])
             print(client_info)
             try:
