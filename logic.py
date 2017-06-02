@@ -85,7 +85,7 @@ MONITOR_BT = {
 }
 
 # Distance limit to obstacle in cm
-DISTANCE_LIMIT = 20
+DISTANCE_LIMIT = 10
 
 STEP_TIME = 0.5
 # ROBOT_ID = 1
