@@ -32,6 +32,8 @@ else:
         sys.exit(0)
 
     if sys.argv[2] == "app":
+        
+        from controllers import proximity_sensor
         APP_MODE = True
         MONITOR_COUNT = 1
     elif sys.argv[2] == "noapp":
@@ -85,7 +87,7 @@ MONITOR_BT = {
 # Distance limit to obstacle in cm
 DISTANCE_LIMIT = 20
 
-STEP_TIME = 0.38
+STEP_TIME = 0.5
 # ROBOT_ID = 1
 
 robot = {
@@ -183,8 +185,13 @@ def execute_command(command):
     elif tag == 'ROTATE_90':
         motors.rotate(90)
     elif tag == 'CHECK_OBSTACLE':
-        proximity_sensor.check_distance()
-        #TODO send distance to monitor
+        distance = proximity_sensor.check_distance()
+        app["client"].send("%s\n" % json.dumps({"distance": distance}))
+    elif tag == 'STOP':
+        motors.stop()
+    elif tag == "FREE_MODE":
+        #TODO free mode
+        pass
     else:
         print("I am doing nothing")
 
